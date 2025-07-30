@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel;
+using Application.CQRS.Queries.Alerts;
 using Application.CQRS.Queries.Forecast;
 using Application.CQRS.Queries.Weather;
+using Application.DTO.Requests.Alert;
 using Application.DTO.Requests.Forecast;
 using Application.DTO.Requests.Weather;
+using Application.DTO.Responses.Alert;
 using Application.DTO.Responses.Forecast;
 using Application.DTO.Responses.General;
 using Application.DTO.Responses.Weather;
@@ -45,6 +48,22 @@ public class WeatherTools
         var query = new GetWeatherForecastQuery
         {
             Request = new GetWeatherForecastRequest(queryString, days)
+        };
+        var response = await _mediator.Send(query).ConfigureAwait(false);
+        return response;
+    }
+
+    [McpServerTool(Name = "get_weather_forecast_alerts", Title = "Get weather forecast alerts")]
+    [Description("Get weather forecast alerts data for given query and days")]
+    public async Task<BaseResponse<IReadOnlyCollection<WeatherAlertResponse>>> GetWeatherForecastAlerts(
+        [Description("Query string, could be: Pass US Zipcode, UK Postcode, Canada Postalcode, IP address, Latitude/Longitude (decimal degree) or city name")]
+        string queryString,
+        [Description("Number of days of forecast required. Value ranges between 1 and 14.")]
+        int days)
+    {
+        var query = new GetWeatherForecastAlertsQuery()
+        {
+            Request = new GetWeatherForecastAlertsRequest(queryString, days)
         };
         var response = await _mediator.Send(query).ConfigureAwait(false);
         return response;
