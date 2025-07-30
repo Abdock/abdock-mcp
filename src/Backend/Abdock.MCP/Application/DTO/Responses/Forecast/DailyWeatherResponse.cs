@@ -1,6 +1,4 @@
-﻿using UnitsNet;
-
-namespace Application.DTO.Responses.Forecast;
+﻿namespace Application.DTO.Responses.Forecast;
 
 public record DailyWeatherResponse
 {
@@ -18,5 +16,5 @@ public record DailyWeatherResponse
     public required string ConditionText { get; init; }
     public required string ConditionIcon { get; init; }
     public required int ConditionCode { get; init; }
-    public required int UvIndex { get; init; }
+    public required double UvIndex { get; init; }
 }

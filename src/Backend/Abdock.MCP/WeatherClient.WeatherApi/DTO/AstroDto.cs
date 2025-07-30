@@ -20,5 +20,5 @@ internal record AstroDto
     public required string MoonPhase { get; init; }
     
     [JsonPropertyName("moon_illumination")]
-    public required string MoonIllumination { get; init; }
+    public required double MoonIllumination { get; init; }
 }

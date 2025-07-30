@@ -101,5 +101,5 @@ internal record HourDto
     public required double GustKph { get; init; }
     
     [JsonPropertyName("uv")]
-    public required int Uv { get; init; }
+    public required double Uv { get; init; }
 }

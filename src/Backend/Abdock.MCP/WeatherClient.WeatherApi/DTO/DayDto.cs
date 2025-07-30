@@ -59,5 +59,5 @@ internal record DayDto
     public required ConditionDto Condition { get; init; }
     
     [JsonPropertyName("uv")]
-    public required int Uv { get; init; }
+    public required double Uv { get; init; }
 }

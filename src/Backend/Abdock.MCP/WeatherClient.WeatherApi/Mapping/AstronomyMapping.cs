@@ -10,12 +10,12 @@ internal static class AstronomyMapping
     {
         return new Astronomy
         {
-            Sunrise = TimeOnly.ParseExact(dto.Sunrise, "hh:mm tt"),
-            Sunset = TimeOnly.ParseExact(dto.Sunset, "hh:mm tt"),
-            Moonrise = TimeOnly.ParseExact(dto.Moonrise, "hh:mm tt"),
-            Moonset = TimeOnly.ParseExact(dto.Moonset, "hh:mm tt"),
+            Sunrise = TimeOnly.TryParseExact(dto.Sunrise, "hh:mm tt", out var sunrise) ? sunrise : null,
+            Sunset = TimeOnly.TryParseExact(dto.Sunset, "hh:mm tt", out var sunset) ? sunset : null,
+            Moonrise = TimeOnly.TryParseExact(dto.Moonrise, "hh:mm tt", out var moonrise) ? moonrise : null,
+            Moonset = TimeOnly.TryParseExact(dto.Moonset, "hh:mm tt", out var moonset) ? moonset : null,
             MoonPhase = dto.MoonPhase,
-            MoonIllumination = Ratio.FromPercent(double.Parse(dto.MoonIllumination))
+            MoonIllumination = Ratio.FromPercent(dto.MoonIllumination)
         };
     }
 }

@@ -1,6 +1,4 @@
-﻿using UnitsNet;
-
-namespace Application.DTO.Responses.Forecast;
+﻿namespace Application.DTO.Responses.Forecast;
 
 public record HourlyWeatherResponse
 {
@@ -27,5 +25,5 @@ public record HourlyWeatherResponse
     public required string ChanceOfSnow { get; init; }
     public required string Visibility { get; init; }
     public required string GustSpeed { get; init; }
-    public required int UvIndex { get; init; }
+    public required double UvIndex { get; init; }
 }

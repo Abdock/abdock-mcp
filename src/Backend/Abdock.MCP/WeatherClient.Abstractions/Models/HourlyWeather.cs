@@ -27,5 +27,5 @@ public record HourlyWeather
     public required Ratio ChanceOfSnow { get; init; }
     public required Length Visibility { get; init; }
     public required Speed GustSpeed { get; init; }
-    public required int UvIndex { get; init; }
+    public required double UvIndex { get; init; }
 }

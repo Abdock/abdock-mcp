@@ -9,8 +9,8 @@ internal static class WeatherMapping
     public static Weather MapToWeather(this CurrentWeatherResponse weather) => new()
     {
         Location = weather.Location.MapToLocation(),
-        Temperature = Temperature.FromDegreesFahrenheit(weather.Current.TempF),
-        FeelsLike = Temperature.FromDegreesFahrenheit(weather.Current.FeelslikeF),
+        Temperature = Temperature.FromDegreesFahrenheit(weather.Current.TempC),
+        FeelsLike = Temperature.FromDegreesFahrenheit(weather.Current.FeelslikeC),
         WindSpeed = Speed.FromMetersPerHour(weather.Current.WindMph),
         Pressure = Pressure.FromMegabars(weather.Current.PressureMb)
     };

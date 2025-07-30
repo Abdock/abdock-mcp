@@ -11,8 +11,8 @@ public record WeatherAlertResponse
     public required string? Certainty { get; init; }
     public required string Event { get; init; }
     public required string? Note { get; init; }
-    public required DateTime Effective { get; init; }
-    public required DateTime Expires { get; init; }
+    public required DateTime? Effective { get; init; }
+    public required DateTime? Expires { get; init; }
     public required string Description { get; init; }
     public required string Instruction { get; init; }
 }

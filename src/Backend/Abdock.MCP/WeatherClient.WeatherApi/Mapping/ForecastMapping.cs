@@ -7,7 +7,7 @@ internal static class ForecastMapping
 {
     public static WeatherForecastDay MapToWeatherForecastDay(this ForecastDayDto dto) => new()
     {
-        Date = DateOnly.ParseExact(dto.Date, "yyyy-MM-dd"),
+        Date = DateOnly.TryParseExact(dto.Date, "yyyy-MM-dd", out var date) ? date : null,
         Day = dto.Day.MapToDailyWeather(),
         Astronomy = dto.Astro.MapToAstronomy(),
         HourlyForecast = dto.Hour.Select(hour => hour.MapToHourlyWeather()).ToArray()

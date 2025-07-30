@@ -18,8 +18,8 @@ internal static class AlertMapping
             Certainty = dto.Certainty,
             Event = dto.Event,
             Note = dto.Note,
-            Effective = DateTime.Parse(dto.Effective),
-            Expires = DateTime.Parse(dto.Expires),
+            Effective = DateTime.TryParse(dto.Effective, out var effective) ? effective : null,
+            Expires = DateTime.TryParse(dto.Expires, out var expires) ? expires : null,
             Description = dto.Desc,
             Instruction = dto.Instruction
         };
