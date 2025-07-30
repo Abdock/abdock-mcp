@@ -52,7 +52,7 @@ public class WeatherApiClient : IWeatherClient
             throw new ArgumentOutOfRangeException(nameof(days), "Days must be between 1 and 14");
         }
 
-        var url = $"{BaseUrl}/forecast.json?key={_options.Value.ApiKey}&q={Uri.EscapeDataString(query)}&aqi=no&alerts=no";
+        var url = $"{BaseUrl}/forecast.json?key={_options.Value.ApiKey}&q={Uri.EscapeDataString(query)}&days={days}&aqi=no&alerts=no";
         using var message = new HttpRequestMessage(HttpMethod.Get, url);
 
         using var response = await _httpClient.SendAsync(message, cancellationToken);
