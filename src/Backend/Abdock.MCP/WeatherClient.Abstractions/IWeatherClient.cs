@@ -12,5 +12,7 @@ public interface IWeatherClient
     /// <param name="cancellationToken">Cancellation token</param>
     /// <exception cref="UnableParseResultException">Unable to parse API response</exception>
     /// <returns>Weather data for current time, for given address</returns>
-    Task<BaseResponse<Weather>> GeCurrentWeatherForAddressAsync(string query, CancellationToken cancellationToken = default);
+    Task<BaseResponse<Weather>> GeCurrentWeatherAsync(string query, CancellationToken cancellationToken = default);
+    Task<BaseResponse<IReadOnlyCollection<WeatherForecastDay>>> GetWeatherForecastAsync(string query, int days = 1, CancellationToken cancellationToken = default);
+    Task<BaseResponse<IReadOnlyCollection<WeatherAlert>>> GetWeatherAlertsAsync(string query, int days = 1, CancellationToken cancellationToken = default);
 }

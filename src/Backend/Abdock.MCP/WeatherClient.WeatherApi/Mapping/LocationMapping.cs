@@ -1,16 +1,16 @@
 ﻿using WeatherClient.Abstractions.Models;
-using WeatherClient.WeatherApi.Models.Base;
+using WeatherClient.WeatherApi.DTO;
 
 namespace WeatherClient.WeatherApi.Mapping;
 
 internal static class LocationMapping
 {
-    public static Location MapToLocation(this WeatherApiLocation location) => new()
+    public static Location MapToLocation(this LocationDto location) => new()
     {
-        City = location.City,
+        City = location.Name,
         Country = location.Country,
-        Latitude = location.Latitude,
-        Longitude = location.Longitude,
+        Latitude = location.Lat,
+        Longitude = location.Lon,
         Region = location.Region,
     };
 }
