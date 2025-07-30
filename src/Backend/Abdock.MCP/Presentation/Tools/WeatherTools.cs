@@ -42,7 +42,7 @@ public class WeatherTools
         [Description("Number of days of forecast required. Value ranges between 1 and 14.")]
         int days)
     {
-        var query = new GetWeatherForecastQuery()
+        var query = new GetWeatherForecastQuery
         {
             Request = new GetWeatherForecastRequest(queryString, days)
         };

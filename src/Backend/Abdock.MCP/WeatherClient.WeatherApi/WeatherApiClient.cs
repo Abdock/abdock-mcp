@@ -84,13 +84,20 @@ public class WeatherApiClient : IWeatherClient
 
     private TParsed DeserializeOrThrow<TParsed>(string json)
     {
-        var parsed = JsonSerializer.Deserialize<TParsed>(json);
-        if (parsed is not null)
+        try
         {
-            return parsed;
+            var parsed = JsonSerializer.Deserialize<TParsed>(json);
+            if (parsed is not null)
+            {
+                return parsed;
+            }
+            _logger.LogCritical("Unable to deserialize API response, JSON: {Json}", json);
+            throw new UnableParseResultException("Unable to deserialize response");
         }
-
-        _logger.LogCritical("Unable to deserialize API response, JSON: {Json}", json);
-        throw new UnableParseResultException("Unable to deserialize response");
+        catch (JsonException e)
+        {
+            _logger.LogCritical(e, "Unable to deserialize API response, JSON: {Json}", json);
+            throw new UnableParseResultException("Unable to deserialize response", e);
+        }
     }
 }

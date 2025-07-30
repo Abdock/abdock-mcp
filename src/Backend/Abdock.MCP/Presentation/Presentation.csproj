@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>b80e7cba-b0a0-4544-ba77-b847f48f5049</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -19,6 +20,7 @@
       <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="2.3.0" />
       <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
       <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
+      <PackageReference Include="UnitsNet.Serialization.JsonNet" Version="5.50.0" />
     </ItemGroup>
 
     <ItemGroup>

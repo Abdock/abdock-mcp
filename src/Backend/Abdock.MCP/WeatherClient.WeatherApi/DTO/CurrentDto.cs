@@ -65,7 +65,7 @@ internal record CurrentDto
     public required double VisMiles { get; init; }
     
     [JsonPropertyName("uv")]
-    public required int Uv { get; init; }
+    public required double Uv { get; init; }
     
     [JsonPropertyName("gust_mph")]
     public required double GustMph { get; init; }

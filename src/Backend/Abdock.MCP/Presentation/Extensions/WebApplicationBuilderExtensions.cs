@@ -1,4 +1,6 @@
-﻿using Application.DTO.Mappers;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Application.DTO.Mappers;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.OpenApi;
 using Presentation.OpenApi;
@@ -19,7 +21,7 @@ public static class WebApplicationBuilderExtensions
 
     public static WebApplicationBuilder ConfigureWeatherApi(this WebApplicationBuilder builder)
     {
-        builder.Services.AddWeatherApi(options => options.ApiKey = builder.Configuration["WeatherApi:ApiKey"]!);
+        builder.Services.AddWeatherApi(builder.Configuration);
         return builder;
     }
 
@@ -39,10 +41,7 @@ public static class WebApplicationBuilderExtensions
             .CreateLogger();
         builder.Logging.ClearProviders();
         builder.Logging.AddSerilog(logger);
-        builder.Services.AddHttpLogging(options =>
-        {
-            options.LoggingFields = HttpLoggingFields.RequestHeaders;
-        });
+        builder.Services.AddHttpLogging(options => { options.LoggingFields = HttpLoggingFields.RequestHeaders; });
         return builder;
     }
 
@@ -56,8 +55,15 @@ public static class WebApplicationBuilderExtensions
     public static WebApplicationBuilder ConfigureMcpServer(this WebApplicationBuilder builder)
     {
         builder.Services.AddMcpServer()
-            .WithHttpTransport(options => options.Stateless = true)
-            .WithTools<WeatherTools>();
+            .WithHttpTransport(options =>
+            {
+                options.Stateless = true;
+                options.TimeProvider = TimeProvider.System;
+            })
+            .WithTools<WeatherTools>(new JsonSerializerOptions(JsonSerializerOptions.Web)
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+            });
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddOpenApi("swagger", options =>
         {
