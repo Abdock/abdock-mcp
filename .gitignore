@@ -243,7 +243,6 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-.vscode/
 /.idea
 **/.idea
 **logs**
