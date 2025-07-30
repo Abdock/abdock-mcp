@@ -2,5 +2,5 @@
 
 public record WeatherApiOptions
 {
-    public required string ApiKey { get; init; }
+    public string ApiKey { get; set; } = string.Empty;
 }
