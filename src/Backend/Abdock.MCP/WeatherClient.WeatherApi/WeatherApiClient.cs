@@ -24,28 +24,23 @@ public class WeatherApiClient : IWeatherClient
         _logger = logger;
     }
 
-    public async Task<BaseResponse<Weather>> GeCurrentWeatherAsync(string query, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<Weather>> GeCurrentWeatherAsync(string query, CancellationToken cancellationToken = default)
     {
         var url = $"{BaseUrl}/current.json?key={_options.Value.ApiKey}&q={Uri.EscapeDataString(query)}&aqi=no";
         using var message = new HttpRequestMessage(HttpMethod.Get, url);
         using var response = await _httpClient.SendAsync(message, cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            return response.StatusCode;
-        }
-
         var json = await response.Content.ReadAsStringAsync(cancellationToken);
-        var weather = JsonSerializer.Deserialize<CurrentWeatherResponse>(json);
-        if (weather is not null)
+        if (response.IsSuccessStatusCode)
         {
+            var weather = DeserializeOrThrow<CurrentWeatherResponse>(json);
             return weather.MapToWeather();
         }
 
-        _logger.LogCritical("Unable to deserialize weather api response, JSON: {Json}", json);
-        throw new UnableParseResultException("Unable to deserialize response");
+        var dto = DeserializeOrThrow<ErrorDto>(json);
+        return dto.MapToErrorResponse();
     }
 
-    public async Task<BaseResponse<IReadOnlyCollection<WeatherForecastDay>>> GetWeatherForecastAsync(string query, int days = 1, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<IReadOnlyCollection<WeatherForecastDay>>> GetWeatherForecastAsync(string query, int days = 1, CancellationToken cancellationToken = default)
     {
         if (days is < 1 or > 14)
         {
@@ -54,27 +49,19 @@ public class WeatherApiClient : IWeatherClient
 
         var url = $"{BaseUrl}/forecast.json?key={_options.Value.ApiKey}&q={Uri.EscapeDataString(query)}&days={days}&aqi=no&alerts=no";
         using var message = new HttpRequestMessage(HttpMethod.Get, url);
-
         using var response = await _httpClient.SendAsync(message, cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            return response.StatusCode;
-        }
-
         var json = await response.Content.ReadAsStringAsync(cancellationToken);
-        var forecastResponse = JsonSerializer.Deserialize<ForecastWeatherResponse>(json);
-
-        if (forecastResponse is not null)
+        if (response.IsSuccessStatusCode)
         {
-            return forecastResponse.Forecast.Forecastday.Select(e => e.MapToWeatherForecastDay()).ToArray();
+            var forecastResponse = DeserializeOrThrow<ForecastWeatherResponse>(json);
+            return forecastResponse.Forecast.Forecastday.Select(forecast => forecast.MapToWeatherForecastDay()).ToArray();
         }
 
-        _logger.LogCritical("Unable to deserialize forecast weather api response, JSON: {Json}", json);
-        throw new UnableParseResultException("Unable to deserialize forecast weather response");
+        var dto = DeserializeOrThrow<ErrorDto>(json);
+        return dto.MapToErrorResponse();
     }
 
-    public async Task<BaseResponse<IReadOnlyCollection<WeatherAlert>>> GetWeatherAlertsAsync(string query, int days = 1, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<IReadOnlyCollection<WeatherAlert>>> GetWeatherAlertsAsync(string query, int days = 1, CancellationToken cancellationToken = default)
     {
         if (days is < 1 or > 14)
         {
@@ -83,23 +70,27 @@ public class WeatherApiClient : IWeatherClient
 
         var url = $"{BaseUrl}/forecast.json?key={_options.Value.ApiKey}&q={Uri.EscapeDataString(query)}&days={days}&aqi=no&alerts=yes";
         using var message = new HttpRequestMessage(HttpMethod.Get, url);
-
         using var response = await _httpClient.SendAsync(message, cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            return response.StatusCode;
-        }
-
         var json = await response.Content.ReadAsStringAsync(cancellationToken);
-        var forecastResponse = JsonSerializer.Deserialize<ForecastWeatherResponse>(json);
-
-        if (forecastResponse is not null)
+        if (response.IsSuccessStatusCode)
         {
+            var forecastResponse = DeserializeOrThrow<ForecastWeatherResponse>(json);
             return forecastResponse.Alerts?.Alert.Select(alert => alert.MapToWeatherAlert()).ToArray() ?? [];
         }
 
-        _logger.LogCritical("Unable to deserialize forecast weather api response, JSON: {Json}", json);
-        throw new UnableParseResultException("Unable to deserialize forecast weather response");
+        var dto = DeserializeOrThrow<ErrorDto>(json);
+        return dto.MapToErrorResponse();
+    }
+
+    private TParsed DeserializeOrThrow<TParsed>(string json)
+    {
+        var parsed = JsonSerializer.Deserialize<TParsed>(json);
+        if (parsed is not null)
+        {
+            return parsed;
+        }
+
+        _logger.LogCritical("Unable to deserialize API response, JSON: {Json}", json);
+        throw new UnableParseResultException("Unable to deserialize response");
     }
 }
