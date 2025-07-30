@@ -1,0 +1,14 @@
+﻿using WeatherClient.Abstractions.Models;
+
+namespace WeatherClient.Abstractions;
+
+public interface IWeatherClient
+{
+    /// <summary>
+    /// Get weather for current time for given address
+    /// </summary>
+    /// <param name="query">Pass US Zipcode, UK Postcode, Canada Postalcode, IP address, Latitude/Longitude (decimal degree) or city name</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Weather data for current time, for given address</returns>
+    Task<BaseResponse<Weather>> GeCurrentWeatherForAddressAsync(string query, CancellationToken cancellationToken = default);
+}
